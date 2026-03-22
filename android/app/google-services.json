@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1079519988046",
+    "project_id": "voltex-app-fdbd5",
+    "storage_bucket": "voltex-app-fdbd5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079519988046:android:251b90fd28df653aef761f",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0g45Ymg-Ia9X4VIcwGI0gsfFDE-_P2jI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
