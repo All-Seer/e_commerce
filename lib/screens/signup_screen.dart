@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../theme.dart';
 import '../widgets/common_widgets.dart';
-import 'home_screen.dart';
+import 'email_verification_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
@@ -40,9 +40,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     if (!mounted) return;
 
     if (success) {
-      // Navigate and remove all previous routes
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const EmailVerificationScreen()),
         (route) => false,
       );
     }

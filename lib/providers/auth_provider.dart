@@ -6,7 +6,12 @@ import '../models/models.dart';
 class AuthState {
   final bool isLoading;
   final String? error;
-  const AuthState({this.isLoading = false, this.error});
+  final bool needsVerification; // true after sign-up, before email confirmed
+  const AuthState({
+    this.isLoading = false,
+    this.error,
+    this.needsVerification = false,
+  });
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
@@ -33,7 +38,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         'isAdmin': false,
         'createdAt': FieldValue.serverTimestamp(),
       });
-      state = const AuthState();
+      // Send email verification immediately after account creation
+      await cred.user?.sendEmailVerification();
+      state = const AuthState(needsVerification: true);
       return true;
     } on FirebaseAuthException catch (e) {
       state = AuthState(error: _message(e.code));
@@ -50,10 +57,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }) async {
     state = const AuthState(isLoading: true);
     try {
-      await _auth.signInWithEmailAndPassword(
+      final cred = await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
+      // Block access until the user clicks the verification link
+      if (cred.user != null && !cred.user!.emailVerified) {
+        await _auth.signOut();
+        state = const AuthState(
+          error: 'Please verify your email before signing in.',
+          needsVerification: true,
+        );
+        return false;
+      }
       state = const AuthState();
       return true;
     } on FirebaseAuthException catch (e) {
@@ -69,6 +85,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await _auth.signOut();
     state = const AuthState();
   }
+
+  /// Re-sends the verification email to the currently signed-in (unverified) user.
+  Future<void> resendVerification() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } catch (_) {}
+  }
+
+  void clearError() => state = const AuthState();
 
   String _message(String code) {
     switch (code) {

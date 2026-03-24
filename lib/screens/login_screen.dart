@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../theme.dart';
 import '../widgets/common_widgets.dart';
+import 'email_verification_screen.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 
@@ -102,9 +103,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 36),
 
-                  // Error banner
+                  // Error banner — with optional "Resend verification" link
                   if (authState.error != null) ...[
                     ErrorBanner(message: authState.error!),
+                    if (authState.needsVerification) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Didn\'t get the email? ',
+                              style: TextStyle(
+                                  color: AppTheme.textSecondary, fontSize: 13)),
+                          GestureDetector(
+                            onTap: () {
+                              ref.read(authProvider.notifier).clearError();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const EmailVerificationScreen()),
+                                (route) => false,
+                              );
+                            },
+                            child: const Text('Resend',
+                                style: TextStyle(
+                                    color: AppTheme.accent,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13)),
+                          ),
+                        ],
+                      ),
+                    ],
                     const SizedBox(height: 16),
                   ],
 
