@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cart_provider.dart';
 import '../theme.dart';
+import '../widgets/base64_image.dart';
 import '../widgets/common_widgets.dart';
 import 'checkout_screen.dart';
 
@@ -49,18 +50,11 @@ class CartScreen extends ConsumerWidget {
                             // Product image
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
+                              child: Base64Image(
+                                base64: item.product.imageBase64,
                                 width: 72,
                                 height: 72,
-                                child: Image.network(
-                                  item.product.imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    color: AppTheme.surface,
-                                    child: const Icon(Icons.image_outlined,
-                                        color: AppTheme.textSecondary),
-                                  ),
-                                ),
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(width: 12),

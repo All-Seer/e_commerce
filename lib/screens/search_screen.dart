@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../providers/cart_provider.dart';
+import '../providers/product_provider.dart';
 import '../theme.dart';
+import '../widgets/base64_image.dart';
 import 'product_detail_screen.dart';
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
 final searchResultsProvider = Provider<List<Product>>((ref) {
   final query = ref.watch(searchQueryProvider).toLowerCase().trim();
-  final products = ref.watch(productsProvider);
+  final products = ref.watch(productsStreamProvider).value ?? [];
   if (query.isEmpty) return products;
   return products.where((p) {
     return p.name.toLowerCase().contains(query) ||
@@ -128,18 +130,11 @@ class _SearchResultTile extends ConsumerWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: SizedBox(
+              child: Base64Image(
+                base64: product.imageBase64,
                 width: 80,
                 height: 80,
-                child: Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    color: AppTheme.surface,
-                    child: const Icon(Icons.image_outlined,
-                        color: AppTheme.textSecondary),
-                  ),
-                ),
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 14),

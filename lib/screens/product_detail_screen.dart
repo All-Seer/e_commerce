@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../providers/cart_provider.dart';
 import '../theme.dart';
+import '../widgets/base64_image.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   final Product product;
@@ -20,14 +21,11 @@ class ProductDetailScreen extends ConsumerWidget {
             pinned: true,
             backgroundColor: AppTheme.primary,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(
-                product.imageUrl,
+              background: Base64Image(
+                base64: product.imageBase64,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: AppTheme.cardBg,
-                  child: const Icon(Icons.image_outlined,
-                      color: AppTheme.textSecondary, size: 64),
-                ),
+                width: double.infinity,
+                height: double.infinity,
               ),
             ),
           ),
@@ -134,13 +132,13 @@ class ProductDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 32),
 
                   // Highlights
-                  const _HighlightRow(icon: Icons.local_shipping_outlined,
+                  _HighlightRow(icon: Icons.local_shipping_outlined,
                       text: 'Free shipping on orders over \$50'),
                   const SizedBox(height: 12),
-                  const _HighlightRow(icon: Icons.replay_outlined,
+                  _HighlightRow(icon: Icons.replay_outlined,
                       text: '30-day hassle-free returns'),
                   const SizedBox(height: 12),
-                  const _HighlightRow(icon: Icons.verified_outlined,
+                  _HighlightRow(icon: Icons.verified_outlined,
                       text: '2-year manufacturer warranty'),
                   const SizedBox(height: 40),
                 ],
@@ -152,10 +150,10 @@ class ProductDetailScreen extends ConsumerWidget {
       bottomNavigationBar: Container(
         padding:
             const EdgeInsets.fromLTRB(24, 16, 24, 32),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppTheme.surface,
           border:
-              Border(top: BorderSide(color: AppTheme.border)),
+              const Border(top: BorderSide(color: AppTheme.border)),
         ),
         child: Row(
           children: [
@@ -185,10 +183,22 @@ class ProductDetailScreen extends ConsumerWidget {
                   ref.read(cartProvider.notifier).addToCart(product);
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Added to cart!'),
-                      backgroundColor: AppTheme.cardBg,
+                    SnackBar(
+                      content: const Text(
+                        'Added to cart!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      backgroundColor: const Color(0xFF2C2C2C),
                       behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      margin: const EdgeInsets.all(12),
                     ),
                   );
                 },

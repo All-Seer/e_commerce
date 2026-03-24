@@ -1,24 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 
-// ─── Products Provider ────────────────────────────────────────────────────────
-final productsProvider = Provider<List<Product>>((ref) => sampleProducts);
-
-final selectedCategoryProvider = StateProvider<String?>((ref) => null);
-
-final filteredProductsProvider = Provider<List<Product>>((ref) {
-  final products = ref.watch(productsProvider);
-  final category = ref.watch(selectedCategoryProvider);
-  if (category == null || category == 'All') return products;
-  return products.where((p) => p.category == category).toList();
-});
-
-final categoriesProvider = Provider<List<String>>((ref) {
-  final products = ref.watch(productsProvider);
-  final cats = products.map((p) => p.category).toSet().toList()..sort();
-  return ['All', ...cats];
-});
-
 // ─── Cart Notifier ────────────────────────────────────────────────────────────
 class CartNotifier extends StateNotifier<List<CartItem>> {
   CartNotifier() : super([]);
@@ -58,26 +40,14 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
 
   void clearCart() => state = [];
 
-  double get subtotal =>
-      state.fold(0, (sum, item) => sum + item.total);
-
+  double get subtotal => state.fold(0, (sum, item) => sum + item.total);
   double get tax => subtotal * 0.12;
-
   double get total => subtotal + tax;
-
-  int get itemCount =>
-      state.fold(0, (sum, item) => sum + item.quantity);
+  int get itemCount => state.fold(0, (sum, item) => sum + item.quantity);
 }
 
-final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
-  return CartNotifier();
-});
+final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>(
+    (ref) => CartNotifier());
 
-final cartCountProvider = Provider<int>((ref) {
-  return ref.watch(cartProvider.notifier).itemCount;
-});
-
-final cartTotalProvider = Provider<double>((ref) {
-  ref.watch(cartProvider);
-  return ref.read(cartProvider.notifier).total;
-});
+final cartCountProvider =
+    Provider<int>((ref) => ref.watch(cartProvider.notifier).itemCount);
