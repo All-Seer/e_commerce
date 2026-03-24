@@ -203,7 +203,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
 
-                const Text('Voltex v1.0.0',
+                const Text('Voltex 5 v1.0.0',
                     style: TextStyle(
                         color: AppTheme.textSecondary, fontSize: 12)),
                 const SizedBox(height: 24),
