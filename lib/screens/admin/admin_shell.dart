@@ -50,7 +50,7 @@ class AdminShell extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           const Text(
-                            'VOLTEX',
+                            'VOLTEX 5',
                             style: TextStyle(
                               color: AppTheme.textPrimary,
                               fontSize: 16,
