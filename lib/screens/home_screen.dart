@@ -173,7 +173,7 @@ class _ShopTab extends ConsumerWidget {
           children: [
             Icon(Icons.bolt, color: AppTheme.accent, size: 22),
             SizedBox(width: 6),
-            Text('VOLTEX'),
+            Text('VOLTEX 5'),
           ],
         ),
         actions: [
